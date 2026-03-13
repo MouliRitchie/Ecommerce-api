@@ -1,0 +1,275 @@
+{
+  "info": {
+    "name": "E-Commerce API",
+    "_postman_id": "ecommerce-api-collection",
+    "description": "Complete API collection for the Django E-Commerce backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/products/categories/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Electronic gadgets and devices\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/categories/"
+          }
+        },
+        {
+          "name": "Add Product",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/products/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Wireless Headphones\",\n  \"description\": \"Noise-cancelling over-ear headphones\",\n  \"price\": \"2999.00\",\n  \"stock_quantity\": 50,\n  \"category\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Product 2",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/products/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mechanical Keyboard\",\n  \"description\": \"RGB backlit mechanical keyboard\",\n  \"price\": \"4500.00\",\n  \"stock_quantity\": 20,\n  \"category\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "List All Products",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/"
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products/1/"
+          }
+        },
+        {
+          "name": "Update Product (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/products/1/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": \"2799.00\",\n  \"stock_quantity\": 45\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Product (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/products/1/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Wireless Headphones Pro\",\n  \"description\": \"Premium noise-cancelling over-ear headphones\",\n  \"price\": \"3499.00\",\n  \"stock_quantity\": 40,\n  \"category\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/products/?search=keyboard",
+              "query": [{"key": "search", "value": "keyboard"}]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/products/2/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Add Product to Cart",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/cart/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_identifier\": \"user_123\",\n  \"product_id\": 1,\n  \"quantity\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Another Product to Cart",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/cart/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_identifier\": \"user_123\",\n  \"product_id\": 2,\n  \"quantity\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "View Cart",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/cart/?user_identifier=user_123",
+              "query": [{"key": "user_identifier", "value": "user_123"}]
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/cart/items/1/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/cart/items/1/"
+          }
+        },
+        {
+          "name": "Clear Entire Cart",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/cart/clear/?user_identifier=user_123",
+              "query": [{"key": "user_identifier", "value": "user_123"}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Place Order from Cart",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/orders/place/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_identifier\": \"user_123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "View Order History",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/orders/?user_identifier=user_123",
+              "query": [{"key": "user_identifier", "value": "user_123"}]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/orders/1/"
+          }
+        },
+        {
+          "name": "Update Order Status - Complete",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/orders/1/status/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_status\": \"Completed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Order Status - Cancel",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/orders/1/status/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_status\": \"Cancelled\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Edge Cases",
+      "item": [
+        {
+          "name": "Add to Cart - Out of Stock Error",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/cart/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_identifier\": \"user_456\",\n  \"product_id\": 1,\n  \"quantity\": 9999\n}"
+            }
+          }
+        },
+        {
+          "name": "Place Order - Empty Cart Error",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": "{{base_url}}/api/orders/place/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_identifier\": \"nonexistent_user\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
