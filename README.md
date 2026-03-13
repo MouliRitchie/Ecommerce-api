@@ -1,6 +1,15 @@
 # E-Commerce Backend API
 
-A Django REST Framework backend for a basic e-commerce system with Product management, Cart, and Order processing.
+A backend module for a basic e-commerce system built with Django REST Framework. It covers the three core pieces — Products, Cart, and Orders — with real business logic like stock management and atomic order processing.
+
+---
+
+## What's inside
+
+- **Products** — full CRUD, category support, search
+- **Cart** — per-user cart, add/update/remove items
+- **Orders** — place orders from cart, auto stock deduction, order history
+- **Admin panel** — manage everything via Django's built-in admin
 
 ---
 
@@ -8,111 +17,110 @@ A Django REST Framework backend for a basic e-commerce system with Product manag
 
 - Python 3.10+
 - Django 4.2
-- Django REST Framework 3.14
-- SQLite (default, zero-config)
+- Django REST Framework
+- SQLite (no setup needed, works out of the box)
 
 ---
 
-## Setup & Run
+## Getting started
 
-### 1. Clone the repository
-
+**1. Clone the repo**
 ```bash
-git clone <your-repo-url>
-cd ecommerce_project
+git clone https://github.com/MouliRitchie/Ecommerce-api.git
+cd Ecommerce-api
 ```
 
-### 2. Create a virtual environment
-
+**2. Create and activate a virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate        # Linux/Mac
-venv\Scripts\activate           # Windows
+
+# Windows
+venv\Scripts\activate
+
+# Mac/Linux
+source venv/bin/activate
 ```
 
-### 3. Install dependencies
-
+**3. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run migrations
-
+**4. Set up the database**
 ```bash
+python manage.py makemigrations products cart orders
 python manage.py migrate
 ```
 
-### 5. Create a superuser (optional, for Django Admin)
-
+**5. (Optional) Create an admin user**
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Start the development server
-
+**6. Run the server**
 ```bash
 python manage.py runserver
 ```
 
-The API will be available at: `http://127.0.0.1:8000/`
+The API will be live at `http://127.0.0.1:8000/`
 
 ---
 
 ## API Endpoints
 
-### Products — `/api/products/`
+### Products `/api/products/`
 
-| Method | URL | Description |
-|--------|-----|-------------|
+| Method | URL | What it does |
+|--------|-----|--------------|
 | GET | `/api/products/` | List all products |
-| POST | `/api/products/` | Add a new product |
+| POST | `/api/products/` | Add a product |
 | GET | `/api/products/<id>/` | Get a single product |
-| PUT | `/api/products/<id>/` | Full update a product |
-| PATCH | `/api/products/<id>/` | Partial update a product |
+| PUT | `/api/products/<id>/` | Full update |
+| PATCH | `/api/products/<id>/` | Partial update |
 | DELETE | `/api/products/<id>/` | Delete a product |
-| GET | `/api/products/categories/` | List all categories |
+| GET | `/api/products/categories/` | List categories |
 | POST | `/api/products/categories/` | Create a category |
 
-**Query params:** `?search=<term>` — search by name, description, or category.
+Supports `?search=<term>` to filter by name, description, or category.
 
 ---
 
-### Cart — `/api/cart/`
+### Cart `/api/cart/`
 
-| Method | URL | Description |
-|--------|-----|-------------|
-| GET | `/api/cart/?user_identifier=<id>` | View cart for a user |
-| POST | `/api/cart/` | Add product to cart |
+| Method | URL | What it does |
+|--------|-----|--------------|
+| GET | `/api/cart/?user_identifier=<id>` | View a user's cart |
+| POST | `/api/cart/` | Add a product to cart |
 | PATCH | `/api/cart/items/<item_id>/` | Update item quantity |
-| DELETE | `/api/cart/items/<item_id>/` | Remove item from cart |
-| DELETE | `/api/cart/clear/?user_identifier=<id>` | Clear entire cart |
+| DELETE | `/api/cart/items/<item_id>/` | Remove an item |
+| DELETE | `/api/cart/clear/?user_identifier=<id>` | Clear the entire cart |
 
 ---
 
-### Orders — `/api/orders/`
+### Orders `/api/orders/`
 
-| Method | URL | Description |
-|--------|-----|-------------|
-| POST | `/api/orders/place/` | Place order from cart |
+| Method | URL | What it does |
+|--------|-----|--------------|
+| POST | `/api/orders/place/` | Place an order from cart |
 | GET | `/api/orders/?user_identifier=<id>` | View order history |
-| GET | `/api/orders/<order_id>/` | View a specific order |
+| GET | `/api/orders/<order_id>/` | Get a specific order |
 | PATCH | `/api/orders/<order_id>/status/` | Update order status |
 
 ---
 
-## Business Logic
+## How the business logic works
 
-- **Stock validation**: When placing an order, all items are checked against current stock before any changes are written (atomic transaction).
-- **Stock decrement**: On successful order, each product's `stock_quantity` is reduced by the ordered quantity.
-- **Stock restore**: If a `Pending` order is cancelled via the status API, stock is automatically restored.
-- **Cart persistence**: Adding a product that's already in the cart increases its quantity rather than duplicating.
-- **Price snapshot**: Order items capture the product name and price at time of order — price changes won't affect past orders.
+- When an order is placed, **all items are stock-checked first** before anything is saved. If any item is out of stock, the whole order is rejected with a clear error message.
+- On a successful order, **stock decreases automatically** for each product.
+- If a Pending order is **cancelled**, the stock is automatically restored.
+- Adding the same product to the cart twice **increases quantity** instead of creating duplicates.
+- Orders **snapshot the product name and price** at the time of purchase, so future price changes don't affect old orders.
 
 ---
 
-## Sample Request Bodies
+## Sample requests
 
-### Add Product
+**Add a product**
 ```json
 POST /api/products/
 {
@@ -124,7 +132,7 @@ POST /api/products/
 }
 ```
 
-### Add to Cart
+**Add to cart**
 ```json
 POST /api/cart/
 {
@@ -134,7 +142,7 @@ POST /api/cart/
 }
 ```
 
-### Place Order
+**Place an order**
 ```json
 POST /api/orders/place/
 {
@@ -142,7 +150,7 @@ POST /api/orders/place/
 }
 ```
 
-### Update Order Status
+**Update order status**
 ```json
 PATCH /api/orders/1/status/
 {
@@ -152,15 +160,15 @@ PATCH /api/orders/1/status/
 
 ---
 
-## Admin Panel
+## Testing with Postman
 
-Visit `http://127.0.0.1:8000/admin/` and log in with your superuser credentials to manage all data visually.
+A full Postman collection is included in the repo (`postman_collection.json`).
+
+1. Open Postman → click **Import** → upload `postman_collection.json`
+2. Run requests in this order: **Categories → Products → Cart → Orders**
 
 ---
 
-## API Testing
+## Admin Panel
 
-Import the included `postman_collection.json` into Postman:
-1. Open Postman → Import → Upload `postman_collection.json`
-2. Set base URL variable to `http://127.0.0.1:8000`
-3. Run requests in order: Categories → Products → Cart → Orders
+Visit `http://127.0.0.1:8000/admin/` to manage products, orders, and carts visually. You'll need a superuser account (see setup step 5).
